@@ -12,6 +12,20 @@ app.use(express.json())
 app.use(express.static('public'))
 // app.use(() => {
 //   console.log('this is top level middleware')})
+
+var requestTime = function (req, res, next) {
+  req.requestTime = Date.now()
+  next()
+}
+
+app.use(requestTime)
+
+app.get('/', function (req, res) {
+  var responseText = 'Hello World!<br>'
+  responseText += '<small>Requested at: ' + req.requestTime + '</small>'
+  res.send(responseText)
+})
+
 app.use(middle)
 
 app.use(session({
